@@ -1,0 +1,446 @@
+#%RAML 1.0
+---
+title: EVALS API
+version: v2
+baseUri: http://api.evals.net/{version}
+mediaType:  application/json
+types:
+  User:
+    type: object
+    properties:
+      identifier: string
+      full_name: string
+      first_name: string
+      last_name: string
+      username: string
+      email: string
+      photo_large: string
+      photo_small: string
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+  Action:
+    type: object
+    properties:
+      name: string
+      description: string
+      default_verifications_required: number
+      trainee_access: boolean
+      active: boolean
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+  PerformedAction:
+    type: object
+    properties:
+      notes: string
+      seconds: number
+      performed_at: string
+      verified: boolean
+      admin_submission: boolean
+      is_duplicate: boolean
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+  Comment:
+    type: object
+    properties:
+      body: string
+      admin_only: boolean
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+  File:
+    type: object
+    properties:
+      location: string
+  Organization:
+    type: object
+    properties:
+      cub_id: string
+      alias: string
+      name: string
+      logo: string
+      timezone: string
+      active: boolean
+      is_valid: boolean
+      active_member_limit: number
+      active_members: number
+      deactivated_member_limit: number
+      dactivated_members: number
+      course_limit: number
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+  Module:
+    type: object
+    properties:
+      name: string
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+  Location:
+    type: object
+    properties:
+      name: string
+      lat: number
+      long: number
+      address: string
+      street: string
+      city: string
+      state: string
+      zip: string
+      notes: string
+      created_at: datetime
+      updated_at: datetime
+      deleted_at: datetime
+/organizations:
+  description: Collection of available Organizations
+  get:
+  /{organizationId}:
+    get:
+    put:
+    /actions:
+      description: Collection of available Actions in Organization
+      get:
+        description: Get all available Actions in Organization
+        responses:
+          200:
+            body:
+              application/json:
+
+      post:
+        description: Create an Action in Organization
+        responses:
+          200:
+            body:
+              application/json:
+
+      /{actionId}:
+        description: Action entity
+        get:
+          description: Get the Action with `actionId = {actionId}`
+          responses:
+            200:
+              body:
+                application/json:
+
+        put:
+          description: Update the Action with `actionId = {actionId}`
+          responses:
+            200:
+              body:
+                application/json:
+
+        delete:
+          description: Delete the Action with `actionId = {actionId}`
+          responses:
+            200:
+              body:
+                application/json:
+
+    /performed-actions:
+      description: Collection of available PerformedActions in Organization
+      get:
+        description: Get all available PerformedActions
+        responses:
+          200:
+            body:
+              application/json:
+
+      post:
+        description: Create a PerformedAction
+        responses:
+          200:
+            body:
+              application/json:
+
+      /{performedActionId}:
+        get:
+          description: Get the PerformedAction with `performedActionId = {performedActionId}`
+          responses:
+            200:
+              body:
+                application/json:
+
+        put:
+          description: Update the PerformedAction with `performedActionId = {performedActionId}`
+          responses:
+            200:
+              body:
+                application/json:
+
+        delete:
+          description: Delete the PerformedAction with `performedActionId = {performedActionId}`
+          responses:
+            200:
+              body:
+                application/json:
+
+    /modules:
+      get:
+      /{moduleId}:
+        get:
+        /actions:
+          get:
+            description: Get all available Actions in Module
+            responses:
+              200:
+                body:
+                  application/json:
+
+          post:
+            description: Create an Action in Module
+            responses:
+              200:
+                body:
+                  application/json:
+
+          /{actionId}:
+            get:
+              description: Get the Action with `actionId = {actionId}`
+              responses:
+                200:
+                  body:
+                    application/json:
+
+            put:
+              description: Update the Action with `actionId = {actionId}`
+              responses:
+                200:
+                  body:
+                    application/json:
+
+            delete:
+              description: Delete the Action with `actionId = {actionId}`
+              responses:
+                200:
+                  body:
+                    application/json:
+
+        /performed-actions:
+          get:
+            description: Get all available PerformedActions
+            responses:
+                200:
+                  body:
+                    application/json:
+
+          post:
+            description: Create a PerformedAction
+            body:
+              application/json:
+                properties:
+                  action_ids:
+                    type: number[]
+                  performer_ids:
+                    type: number[]
+                  location_id:
+                    type: number
+                  performed_at:
+                    type: datetime
+                  notes:
+                    type: string
+                  seconds:
+                    type: number
+                  files:
+                    type: array
+            responses:
+                200:
+                  body:
+                    application/json:
+                      example: |
+                        {
+                          "data": {
+                            "type": "performed-action",
+                            "id": "1",
+                            "attributes": {
+                              "notes": "So many good things to note.",
+                              "seconds": "300",
+                              "performed_at": "2018-03-22T19:00:00+0000",
+                              "verified": false,
+                              "admin_submission": false,
+                              "is_duplicate": false,
+                              "created_at": "2018-03-22T19:00:00+0000",
+                              "updated_at": "2018-03-22T19:00:00+0000",
+                              "deleted_at": null,
+                            },
+                            "relationships": {
+                              "actions": {
+                                "data": [
+                                  "type": "action",
+                                  "id": "1"
+                                ]
+                              },
+                              "organization": {
+                                "data": {
+                                  "type": "organization",
+                                  "id": "1"
+                                }
+                              },
+                              "performers": {
+                                "data": [
+                                  {
+                                    "type": "user",
+                                    "id": "226"
+                                  },
+                                  {
+                                    "type": "user",
+                                    "id": "229"
+                                  }
+                                ]
+                              },
+                              "submitter": {
+                                "data": {
+                                  "type": "user",
+                                  "id": "275"
+                                }
+                              }
+                            }
+                          },
+                          "included": [
+                            {
+                              "type": "action",
+                              "id": "1",
+                              "attributes": {
+                                "name": "First",
+                                "description": "First one.",
+                                "default_verifications_required": null,
+                                "trainee_access": true,
+                                "active": true,
+                                "created_at": "2018-03-17T18:27:36-0700",
+                                "updated_at": "2018-03-20T12:52:03-0700",
+                                "deleted_at": null
+                              }
+                            },
+                            {
+                              "type": "organization",
+                              "id": "1",
+                              "attributes": {
+                                "cub_id": "org_jU1ja7IYWzfU8nB1",
+                                "alias": "KERMIT",
+                                "name": "Kermit Department",
+                                "logo": "https://cub-praetorian.netdna-ssl.com/organization/logo/org_jU1ja7IYWzfU8nB1.jpeg",
+                                "timezone": "America/Los_Angeles",
+                                "active": true,
+                                "is_valid": true,
+                                "active_member_limit": 136,
+                                "active_members": 135,
+                                "deactivated_member_limit": null,
+                                "dactivated_members": 8,
+                                "course_limit": 200,
+                                "created_at": "2015-09-11T04:18:00-0700",
+                                "updated_at": "2018-02-23T11:32:20-0800",
+                                "deleted_at": null
+                              }
+                            },
+                            {
+                              "type": "user",
+                              "id": "226",
+                              "attributes": {
+                                "identifier": "Johnson, Mike",
+                                "full_name": "Johnson, Mike",
+                                "first_name": "Mike",
+                                "last_name": "Johnson",
+                                "username": null,
+                                "email": "jpickett+johnson@evals.net",
+                                "photo_large": null,
+                                "photo_small": null,
+                                "created_at": "2014-04-17T19:56:45-0700",
+                                "updated_at": "2017-12-06T15:06:44-0800",
+                                "deleted_at": null
+                              }
+                            },
+                            {
+                              "type": "user",
+                              "id": "229",
+                              "attributes": {
+                                "identifier": "Maxwell, Jonathan",
+                                "full_name": "Maxwell, Jonathan",
+                                "first_name": "Jonathan",
+                                "last_name": "Maxwell",
+                                "username": null,
+                                "email": "jpickett+maxwell@evals.net",
+                                "photo_large": "https://cub-praetorian.netdna-ssl.com/cache/39/a4/39a4824e61cc3e6a4090a99314e6e49a.jpg",
+                                "photo_small": "https://cub-praetorian.netdna-ssl.com/cache/ac/67/ac67f9c624eba6fef4891618e1410c8c.jpg",
+                                "created_at": "2014-04-18T04:00:36-0700",
+                                "updated_at": "2018-03-09T16:28:23-0800",
+                                "deleted_at": null
+                              }
+                            },
+                            {
+                              "type": "user",
+                              "id": "275",
+                              "attributes": {
+                                "identifier": "Last, Todd",
+                                "full_name": "Last, Todd",
+                                "first_name": "Todd",
+                                "last_name": "Last",
+                                "username": null,
+                                "email": "jpickett+todd@evals.net",
+                                "photo_large": "https://cub-praetorian.netdna-ssl.com/cache/df/62/df62a93e4c504fc8c30b93b609b79a9d.jpg",
+                                "photo_small": "https://cub-praetorian.netdna-ssl.com/cache/1e/bf/1ebf71d383ce9bb54490f696847075f6.jpg",
+                                "created_at": "2016-02-16T15:51:04-0800",
+                                "updated_at": "2018-03-15T09:02:51-0700",
+                                "deleted_at": null
+                              }
+                            }
+                          ]
+                        }
+
+          /{performedActionId}:
+            get:
+              description: Get the PerformedAction with `performedActionId = {performedActionId}`
+              responses:
+                200:
+                  body:
+                    application/json:
+
+            put:
+              description: Update the PerformedAction with `performedActionId = {performedActionId}`
+              body:
+                application/json:
+                  properties:
+                    action_ids:
+                      type: number[]
+                    performer_ids:
+                      type: number[]
+                    location_id:
+                      type: number
+                    performed_at:
+                      type: datetime
+                    notes:
+                      type: string
+                    seconds:
+                      type: number
+                    files:
+                      type: array
+              responses:
+                200:
+                  body:
+                    application/json:
+
+            delete:
+              description: Delete the PerformedAction with `performedActionId = {performedActionId}`
+              responses:
+                200:
+                  body:
+                    application/json:
+                      example: |
+                        {
+                          "data": {
+                            "type": "performed-action",
+                            "id": "1",
+                            "attributes": {
+                              "notes": "So many good things to note.",
+                              "seconds": "300",
+                              "performed_at": "2018-03-22T19:00:00+0000",
+                              "verified": false,
+                              "admin_submission": false,
+                              "is_duplicate": false,
+                              "created_at": "2018-03-22T19:00:00+0000",
+                              "updated_at": "2018-03-22T19:00:00+0000",
+                              "deleted_at": "2018-03-22T20:00:00+0000",
+                            }
+                          }
+                        }
